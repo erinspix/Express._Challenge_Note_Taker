@@ -1,0 +1,46 @@
+
+# Node modules directory
+node_modules/
+
+# Environment variables file
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Dependency directories
+jspm_packages/
+
+# Build output
+dist/
+build/
+
+# IDE or Editor directories and files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Local environment files
+*.local
+
+# Database files
+db.json
+
+# Coverage reports
+coverage/
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# Configuration files that are environment-specific or user-specific
+*.env.*
