@@ -24,7 +24,7 @@ app.get('*', (req, res) => {
 
 // API Routes
 app.get('/api/notes', (req, res) => {
-  fs.readFile('db/db.json', 'utf8', (err, data) => {
+  fs.readFile('./database/database.json', 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       res.status(500).json({ error: 'Failed to read notes' });
@@ -44,14 +44,14 @@ app.post('/api/notes', (req, res) => {
       text,
     };
 
-    fs.readFile('db/db.json', 'utf8', (err, data) => {
+    fs.readFile('./database/database.json', 'utf8', (err, data) => {
       if (err) {
         console.error(err);
         res.status(500).json({ error: 'Failed to read notes' });
       } else {
         const notes = JSON.parse(data);
         notes.push(newNote);
-        fs.writeFile('db/db.json', JSON.stringify(notes, null, 2), (err) => {
+        fs.writeFile('./database/database.json', JSON.stringify(notes, null, 2), (err) => {
           if (err) {
             console.error(err);
             res.status(500).json({ error: 'Failed to save note' });
@@ -70,25 +70,24 @@ app.listen(PORT, () =>
   console.log(`App listening at http://localhost:${PORT}`)
 );
 app.delete('/api/notes/:id', (req, res) => {
-    const noteId = req.params.id;
-  
-    fs.readFile('db/db.json', 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Failed to read notes' });
-      } else {
-        let notes = JSON.parse(data);
-        notes = notes.filter(note => note.id !== noteId);
-  
-        fs.writeFile('db/db.json', JSON.stringify(notes, null, 2), (err) => {
-          if (err) {
-            console.error(err);
-            res.status(500).json({ error: 'Failed to delete note' });
-          } else {
-            res.json({ message: 'Note deleted successfully' });
-          }
-        });
-      }
-    });
+  const noteId = req.params.id;
+
+  fs.readFile('./database/database.json', 'utf8', (err, data) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Failed to read notes' });
+    } else {
+      let notes = JSON.parse(data);
+      notes = notes.filter(note => note.id !== noteId);
+
+      fs.writeFile('database/database.json', JSON.stringify(notes, null, 2), (err) => {
+        if (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Failed to delete note' });
+        } else {
+          res.json({ message: 'Note deleted successfully' });
+        }
+      });
+    }
   });
-  
+});
