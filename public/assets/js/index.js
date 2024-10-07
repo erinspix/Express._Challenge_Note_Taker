@@ -11,11 +11,11 @@ let activeNote = {};
 // Function to get notes from the server
 const getNotes = async () => {
   try {
-    const response = await fetch('/api/notes'); // Make sure this URL is correct
+    const response = await fetch('/api/notes'); 
     if (!response.ok) {
       throw new Error('Failed to fetch notes');
     }
-    return await response.json(); // Convert the response to JSON format
+    return await response.json();
   } catch (error) {
     console.error('Error fetching notes:', error);
   }
@@ -42,25 +42,36 @@ const renderActiveNote = () => {
   if (activeNote.id) {
     noteTitle.value = activeNote.title;
     noteText.value = activeNote.text;
+    noteTitle.setAttribute('readonly', true);
+    noteText.setAttribute('readonly', true);
   } else {
     noteTitle.value = '';
     noteText.value = '';
+    noteTitle.removeAttribute('readonly');
+    noteText.removeAttribute('readonly');
   }
 };
 
 // Function to handle the "Save Note" button click
 const handleSaveNote = () => {
   const newNote = { title: noteTitle.value, text: noteText.value };
-  saveNoteBtn.style.display = 'none'; // Hide save button after click
-  newNoteBtn.style.display = 'inline'; // Show "New Note" button
+  saveNoteBtn.style.display = 'none';
+  newNoteBtn.style.display = 'inline';
   saveNote(newNote);
 };
 
 // Function to handle selecting a note from the list
 const handleSelectNote = (e) => {
-  const noteId = e.target.getAttribute('data-id');
-  activeNote = JSON.parse(noteId); // Set active note
+  const noteData = e.target.closest('li').getAttribute('data-note');
+  activeNote = JSON.parse(noteData); // Set active note
   renderActiveNote();
+};
+
+// Function to handle deleting a note
+const handleDeleteNote = (e) => {
+  e.stopPropagation(); // Prevent the click from triggering the note selection
+  const noteId = e.target.closest('li').getAttribute('data-id');
+  deleteNote(noteId);
 };
 
 // Function to display notes on the left-hand column
@@ -69,10 +80,20 @@ const displayNotes = async () => {
   noteList.innerHTML = ''; // Clear current list
   notes.forEach((note) => {
     const li = document.createElement('li');
-    li.classList.add('list-group-item');
-    li.textContent = note.title;
-    li.setAttribute('data-id', JSON.stringify(note));
-    li.addEventListener('click', handleSelectNote);
+    li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+    li.setAttribute('data-note', JSON.stringify(note));
+    li.setAttribute('data-id', note.id);
+
+    const noteTitleSpan = document.createElement('span');
+    noteTitleSpan.textContent = note.title;
+    noteTitleSpan.addEventListener('click', handleSelectNote);
+
+    const deleteBtn = document.createElement('i');
+    deleteBtn.classList.add('fas', 'fa-trash-alt', 'text-danger', 'delete-note');
+    deleteBtn.style.cursor = 'pointer';
+    deleteBtn.addEventListener('click', handleDeleteNote);
+
+    li.append(noteTitleSpan, deleteBtn);
     noteList.appendChild(li);
   });
 };
@@ -82,8 +103,8 @@ saveNoteBtn.addEventListener('click', handleSaveNote);
 newNoteBtn.addEventListener('click', () => {
   activeNote = {};
   renderActiveNote();
-  newNoteBtn.style.display = 'none'; // Hide "New Note" button
-  saveNoteBtn.style.display = 'inline'; // Show save button
+  newNoteBtn.style.display = 'none';
+  saveNoteBtn.style.display = 'inline';
 });
 clearFormBtn.addEventListener('click', () => {
   noteTitle.value = '';
@@ -92,4 +113,3 @@ clearFormBtn.addEventListener('click', () => {
 
 // Initial call to display notes
 displayNotes();
-fetch('/api/notes')

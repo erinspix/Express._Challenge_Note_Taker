@@ -44,3 +44,5 @@ coverage/
 
 # Configuration files that are environment-specific or user-specific
 *.env.*
+
+*.package-lock.json

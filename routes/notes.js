@@ -108,7 +108,7 @@ notes.post('/', async (req, res) => {
     };
 
     currentNotes.push(newNote); // Add the new note to the current notes
-    await writeToFile(path.join(__dirname, '../db/db.json'), currentNotes); // Write the updated notes to the JSON file
+    await writeToFile(path.join(__dirname, '../../db/db.json'), currentNotes); // Write the updated notes to the JSON file
 
     res.status(200).json(newNote); // Send the new note as a JSON response with status 200 (OK)
   } catch (err) {

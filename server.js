@@ -31,12 +31,12 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-// GET route for retrieving all notes
-app.get('/api/notes', (req, res) => {
-  readFromFile('./db/db.json')
-    .then((data) => res.json(JSON.parse(data)))
-    .catch((err) => res.status(500).json({ error: 'Failed to read notes' }));
-});
+// // GET route for retrieving all notes
+// app.get('/api/notes', (req, res) => {
+//   readFromFile('./db/db.json')
+//     .then((data) => res.json(JSON.parse(data)))
+//     .catch((err) => res.status(500).json({ error: 'Failed to read notes' }));
+// });
 
 // POST route for adding a new note
 app.post('/api/notes', (req, res) => {
