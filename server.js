@@ -1,93 +1,73 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
+const { readFromFile, writeToFile, readAndAppend } = require('./fsUtils');
 const { v4: uuidv4 } = require('uuid');
-
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware for parsing JSON and urlencoded form data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const cog = require('./cog');
 
-// Serve static files from the 'public' directory
+// Use the custom cog middleware
+app.use(cog);
+app.get('/api/notes', (req, res) => {
+  readFromFile('./db/db.json')
+    .then((data) => res.json(JSON.parse(data)))
+    .catch((err) => res.status(500).json({ error: 'Failed to read notes' }));
+});
+
+
+// Middleware to parse JSON and serve static files
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static('public'));
 
-// HTML Routes
+// HTML route to serve notes.html
 app.get('/notes', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/notes.html'));
 });
 
+// Catch-all route to serve index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-// API Routes
+// GET route for retrieving all notes
 app.get('/api/notes', (req, res) => {
-  fs.readFile('./database/database.json', 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to read notes' });
-    } else {
-      res.json(JSON.parse(data));
-    }
-  });
+  readFromFile('./db/db.json')
+    .then((data) => res.json(JSON.parse(data)))
+    .catch((err) => res.status(500).json({ error: 'Failed to read notes' }));
 });
 
+// POST route for adding a new note
 app.post('/api/notes', (req, res) => {
   const { title, text } = req.body;
 
   if (title && text) {
-    const newNote = {
-      id: uuidv4(),
-      title,
-      text,
-    };
+    const newNote = { title, text, id: uuidv4() };
 
-    fs.readFile('./database/database.json', 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Failed to read notes' });
-      } else {
-        const notes = JSON.parse(data);
-        notes.push(newNote);
-        fs.writeFile('./database/database.json', JSON.stringify(notes, null, 2), (err) => {
-          if (err) {
-            console.error(err);
-            res.status(500).json({ error: 'Failed to save note' });
-          } else {
-            res.json(newNote);
-          }
-        });
-      }
-    });
+    readAndAppend(newNote, './db/db.json');
+    res.status(201).json(newNote);
   } else {
     res.status(400).json({ error: 'Note title and text are required' });
   }
 });
 
-app.listen(PORT, () =>
-  console.log(`App listening at http://localhost:${PORT}`)
-);
+// DELETE route for deleting a note by ID (Bonus)
 app.delete('/api/notes/:id', (req, res) => {
   const noteId = req.params.id;
 
-  fs.readFile('./database/database.json', 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to read notes' });
-    } else {
-      let notes = JSON.parse(data);
-      notes = notes.filter(note => note.id !== noteId);
+  readFromFile('./db/db.json')
+    .then((data) => {
+      const notes = JSON.parse(data);
+      const updatedNotes = notes.filter((note) => note.id !== noteId);
 
-      fs.writeFile('database/database.json', JSON.stringify(notes, null, 2), (err) => {
-        if (err) {
-          console.error(err);
-          res.status(500).json({ error: 'Failed to delete note' });
-        } else {
-          res.json({ message: 'Note deleted successfully' });
-        }
-      });
-    }
-  });
+      writeToFile('./db/db.json', updatedNotes);
+      res.json({ success: true });
+    })
+    .catch((err) => res.status(500).json({ error: 'Failed to delete note' }));
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

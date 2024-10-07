@@ -10,8 +10,15 @@ let activeNote = {};
 
 // Function to get notes from the server
 const getNotes = async () => {
-  const response = await fetch('/api/notes', { method: 'GET' });
-  return response.json();
+  try {
+    const response = await fetch('/api/notes'); // Make sure this URL is correct
+    if (!response.ok) {
+      throw new Error('Failed to fetch notes');
+    }
+    return await response.json(); // Convert the response to JSON format
+  } catch (error) {
+    console.error('Error fetching notes:', error);
+  }
 };
 
 // Function to save a note to the server
@@ -85,3 +92,4 @@ clearFormBtn.addEventListener('click', () => {
 
 // Initial call to display notes
 displayNotes();
+fetch('/api/notes')
