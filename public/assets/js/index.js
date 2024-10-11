@@ -1,10 +1,19 @@
+let noteTitle 
+let noteText 
+let saveNoteBtn 
+let newNoteBtn 
+let clearFormBtn 
+let noteList 
+
 // Define DOM elements
-const noteTitle = document.querySelector('.note-title');
-const noteText = document.querySelector('.note-textarea');
-const saveNoteBtn = document.querySelector('.save-note');
-const newNoteBtn = document.querySelector('.new-note');
-const clearFormBtn = document.querySelector('.clear-btn');
-const noteList = document.querySelector('#list-group');
+if(window.location.pathname == '/notes') {
+   noteTitle = document.querySelector('.note-title');
+   noteText = document.querySelector('.note-textarea');
+   saveNoteBtn = document.querySelector('.save-note');
+   newNoteBtn = document.querySelector('.new-note');
+   clearFormBtn = document.querySelector('.clear-btn');
+   noteList = document.querySelector('#list-group');
+}
 
 let activeNote = {};
 
@@ -28,6 +37,9 @@ const saveNote = async (note) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(note),
   });
+
+  noteTitle.value = '';
+  noteText.value = '';
   await displayNotes(); // Refresh note list
 };
 
@@ -77,6 +89,7 @@ const handleDeleteNote = (e) => {
 // Function to display notes on the left-hand column
 const displayNotes = async () => {
   const notes = await getNotes();
+//  console.log("Notes: ", notes);
   noteList.innerHTML = ''; // Clear current list
   notes.forEach((note) => {
     const li = document.createElement('li');
@@ -89,8 +102,8 @@ const displayNotes = async () => {
     noteTitleSpan.addEventListener('click', handleSelectNote);
 
     const deleteBtn = document.createElement('i');
-    deleteBtn.classList.add('fas', 'fa-trash-alt', 'text-danger', 'delete-note');
-    deleteBtn.style.cursor = 'pointer';
+    deleteBtn.classList.add('fas', 'fa-trash-alt', 'float-right', 'text-danger', 'delete-note');
+   // deleteBtn.style.cursor = 'pointer';
     deleteBtn.addEventListener('click', handleDeleteNote);
 
     li.append(noteTitleSpan, deleteBtn);
@@ -99,17 +112,19 @@ const displayNotes = async () => {
 };
 
 // Event listeners for buttons
-saveNoteBtn.addEventListener('click', handleSaveNote);
-newNoteBtn.addEventListener('click', () => {
-  activeNote = {};
-  renderActiveNote();
-  newNoteBtn.style.display = 'none';
-  saveNoteBtn.style.display = 'inline';
-});
-clearFormBtn.addEventListener('click', () => {
-  noteTitle.value = '';
-  noteText.value = '';
-});
+if(window.location.pathname == '/notes') {
+  saveNoteBtn.addEventListener('click', handleSaveNote);
+  newNoteBtn.addEventListener('click', () => {
+    activeNote = {};
+    renderActiveNote();
+    newNoteBtn.style.display = 'none';
+    saveNoteBtn.style.display = 'inline';
+  });
+  clearFormBtn.addEventListener('click', () => {
+    noteTitle.value = '';
+    noteText.value = '';
+  });
+}
 
 // Initial call to display notes
 displayNotes();

@@ -29,9 +29,6 @@ Thumbs.db
 # Local environment files
 *.local
 
-# Database files
-db.json
-
 # Coverage reports
 coverage/
 
