@@ -1,45 +1,66 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <!-- Meta tags for character encoding, viewport settings, and compatibility -->
+  <meta charset="UTF-8" /> <!-- Specifies the character set as UTF-8 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Ensures proper scaling on mobile devices -->
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" /> <!-- Provides compatibility for older versions of Internet Explorer -->
+
+  <!-- Page title -->
   <title>Note Taker</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous"> 
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous" />
+
+  <!-- Bootstrap CSS for styling and layout -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+  <!-- Font Awesome CSS for using icon fonts -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous" />
+
+  <!-- Custom CSS file for additional styles specific to this application -->
   <link rel="stylesheet" href="./assets/css/styles.css"> 
 </head>
 <body>
+  <!-- Navigation bar at the top of the page with the app title and action buttons -->
   <nav class="navbar bg-info">
-    <a class="navbar-brand text-light p-3" href="/">Note Taker</a>
+    <a class="navbar-brand text-light p-3" href="/">Note Taker</a> <!-- Application title as a link to the home page -->
     <div class="icons">
+      <!-- Button to save a note -->
       <button type="button" class="btn btn-outline-light btn-sm save-note">
-        <span class="fas fa-save"></span> Save Note
+        <span class="fas fa-save"></span> Save Note <!-- Icon and text for the save button -->
       </button>
+      <!-- Button to create a new note -->
       <button type="button" class="btn btn-outline-light btn-sm new-note">
-        <span class="fas fa-edit"></span> New Note
+        <span class="fas fa-edit"></span> New Note <!-- Icon and text for the new note button -->
       </button>
+      <!-- Button to clear the form -->
       <button type="button" class="btn btn-sm btn-outline-danger clear-btn">
-        <span class="fas fa-times"></span> Clear Form
+        <span class="fas fa-times"></span> Clear Form <!-- Icon and text for the clear form button -->
       </button>
     </div>
   </nav>
+
+  <!-- Main container for the note-taking interface -->
   <div class="container-fluid">
     <div class="row">
+      <!-- Left column for displaying the list of saved notes -->
       <div class="col-4 list-container" id="list-container">
-        <div class="card">
-          <ul id="list-group" class="list-group"></ul>
-
+        <div class="card"> <!-- Card to hold the list of notes -->
+          <ul id="list-group" class="list-group"></ul> <!-- Unordered list to display note titles -->
         </div>
       </div>
+
+      <!-- Right column for the note form where users can create or edit notes -->
       <div class="col-8">
         <form class="note-form">
+          <!-- Input field for the note title -->
           <input class="note-title" placeholder="Note Title" maxlength="28" type="text" />
+          <!-- Textarea for the note body -->
           <textarea class="note-textarea" placeholder="Note Text"></textarea>
         </form>
       </div>
     </div>
   </div>
+
+  <!-- JavaScript file to handle app functionality -->
   <script src="./assets/js/index.js"></script>
 </body>
 </html>
