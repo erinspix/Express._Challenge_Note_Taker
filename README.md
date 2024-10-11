@@ -42,3 +42,6 @@ For any questions, please contact me with the information below:
 
 GitHub: [GitHub: erinspix](https://github.com/GitHub: erinspix)  
 Email: e.spix@yahoo.com
+- **Home Page**: ![Home Page](/images/homepage-notetaker.png)
+
+- **Adding a Task**: ![Adding a Task](/images/notepage-notetaker.png)
